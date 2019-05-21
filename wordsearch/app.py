@@ -1,6 +1,10 @@
+import random
+import re
 import numpy as np
 from string import ascii_lowercase
-import random
+
+
+WORD_RE = re.compile('^[a-zA-Z]+$')
 
 
 class GameBoard:
@@ -30,3 +34,27 @@ class GameBoard:
         for row in self.board:
             s += "| " + "  ".join(row) + " |\n"
         return s
+
+
+class WordIndex:
+    """A contains a list of words used to search a game board grid."""
+
+    def __init__(self, words=[]):
+        self.index = {}
+        for word in words:
+            self.add_word(word)
+
+    def add_word(self, word):
+        """Adds a word to the index."""
+        if not isinstance(word, str) or not WORD_RE.match(word):
+            raise ValueError(
+                f"WordIndex requires entries be of type str or matching the {WORD_RE} regex pattern: {word}")
+        word = word.lower()
+        if word[0] in self.index.keys():
+            self.index[word[0]].append(word)
+        else:
+            self.index[word[0]] = [word]
+
+    def sort_index(self):
+        for k, v in self.index.items():
+            v.sort()
