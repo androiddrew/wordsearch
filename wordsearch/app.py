@@ -80,11 +80,11 @@ class WordScanner:
         self.found = set()
 
     def sweep_board(self, gameboard):
-        """Sweeps and entire board for words in the WordIndex"""
+        """Sweeps an entire board for words in the WordIndex"""
         self.sweep_horizontal(gameboard.board)
         self.sweep_horizontal(np.flip(gameboard.board, 1))
         self.sweep_horizontal(gameboard.board.T)
-        self.sweep_horizontal(np.flip(gameboard.board.T),1)
+        self.sweep_horizontal(np.flip(gameboard.board.T, 1))
         self.sweep_diagonal(gameboard.board)
         self.sweep_diagonal(gameboard.board)
 
@@ -111,6 +111,6 @@ def main():
     scanner = WordScanner(index)
     print(game)
     print("The words you need to search for are:")
-    scanner.sweep_horizontal(game.board)
+    scanner.sweep_board(game)
     for word in scanner.found:
         print(word)
