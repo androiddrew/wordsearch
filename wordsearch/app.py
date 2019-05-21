@@ -107,14 +107,10 @@ class WordScanner:
 def main():
     print("Lets play a game!")
     game = GameBoard(size=15)
-    index = WordIndex.from_file("/Users/Drewbednar/PycharmProjects/wordsearch/words.txt")
+    index = WordIndex.from_file("./words.txt")
     scanner = WordScanner(index)
     print(game)
     print("The words you need to search for are:")
     scanner.sweep_horizontal(game.board)
     for word in scanner.found:
         print(word)
-
-
-if __name__ == "__main__":
-    main()
