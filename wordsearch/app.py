@@ -3,8 +3,7 @@ import re
 import numpy as np
 from string import ascii_lowercase
 
-
-WORD_RE = re.compile('^[a-zA-Z]+$')
+WORD_RE = re.compile("^[a-zA-Z]+$")
 
 
 class GameBoard:
@@ -48,7 +47,8 @@ class WordIndex:
         """Adds a word to the index."""
         if not isinstance(word, str) or not WORD_RE.match(word):
             raise ValueError(
-                f"WordIndex requires entries be of type str or matching the {WORD_RE} regex pattern: {word}")
+                f"WordIndex entries must be type str or matching the {WORD_RE} regex pattern: {word}"
+            )
         word = word.lower()
         if word[0] in self.index.keys():
             self.index[word[0]].append(word)
@@ -58,3 +58,11 @@ class WordIndex:
     def sort_index(self):
         for k, v in self.index.items():
             v.sort()
+
+    @classmethod
+    def from_file(cls, path=None):
+        index = cls.__call__()
+        with open(path, mode="r") as f:
+            for line in f:
+                index.add_word(line.strip())
+        return index
