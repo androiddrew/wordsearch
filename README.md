@@ -13,6 +13,7 @@ git clone https://github.com/androiddrew/wordsearch.git
 Create a virtual environment and install the dependencies:
 
 ```
+cd ./worsearch
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
