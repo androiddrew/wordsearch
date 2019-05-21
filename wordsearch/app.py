@@ -34,6 +34,9 @@ class GameBoard:
             s += "| " + "  ".join(row) + " |\n"
         return s
 
+    def flip_board(self, axis=0):
+        pass
+
 
 class WordIndex:
     """A contains a list of words used to search a game board grid."""
@@ -43,7 +46,7 @@ class WordIndex:
         for word in words:
             self.add_word(word)
 
-    def add_word(self, word):
+    def add_word(self, word: str):
         """Adds a word to the index."""
         if not isinstance(word, str) or not WORD_RE.match(word):
             raise ValueError(
@@ -56,6 +59,7 @@ class WordIndex:
             self.index[word[0]] = [word]
 
     def sort_index(self):
+        """Sorts all lists of words in their respective lists."""
         for k, v in self.index.items():
             v.sort()
 
@@ -66,3 +70,51 @@ class WordIndex:
             for line in f:
                 index.add_word(line.strip())
         return index
+
+
+class WordScanner:
+    """Scans a game board grid for words in a WordIndex."""
+
+    def __init__(self, index: WordIndex = None):
+        self.words = index
+        self.found = set()
+
+    def sweep_board(self, gameboard):
+        """Sweeps and entire board for words in the WordIndex"""
+        self.sweep_horizontal(gameboard.board)
+        self.sweep_horizontal(np.flip(gameboard.board, 1))
+        self.sweep_horizontal(gameboard.board.T)
+        self.sweep_horizontal(np.flip(gameboard.board.T),1)
+        self.sweep_diagonal(gameboard.board)
+        self.sweep_diagonal(gameboard.board)
+
+    def sweep_horizontal(self, board):
+        """Sweeps an array for words in the WordIndex."""
+        for row in board:
+            for i, e in enumerate(row):
+                _word = ''.join(row[:len(row) - i])
+                if self.search_word(_word):
+                    self.found.add(_word)
+
+    def sweep_diagonal(self, board):
+        # Use np.diagonal() to search the diagonals of the board.
+        pass
+
+    def search_word(self, word) -> bool:
+        return word in self.words.index[word[0]]
+
+
+def main():
+    print("Lets play a game!")
+    game = GameBoard(size=15)
+    index = WordIndex.from_file("/Users/Drewbednar/PycharmProjects/wordsearch/words.txt")
+    scanner = WordScanner(index)
+    print(game)
+    print("The words you need to search for are:")
+    scanner.sweep_horizontal(game.board)
+    for word in scanner.found:
+        print(word)
+
+
+if __name__ == "__main__":
+    main()
